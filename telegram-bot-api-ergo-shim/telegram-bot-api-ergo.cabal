@@ -1,0 +1,58 @@
+cabal-version:      3.4
+name:               telegram-bot-api-ergo-shim
+version:            0.1.0.0
+synopsis:
+    A shim for telegram-bot-api to use types from telegram-bot-ergo-types.
+
+-- description:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Drew Fenwick
+maintainer:         drew.e.fenwick+github@gmail.com
+-- copyright:
+category:           Web
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+common dialect
+  default-language:   Haskell2010
+  default-extensions:
+    BlockArguments
+    DeriveGeneric
+    DerivingStrategies
+    DerivingVia
+    GeneralizedNewtypeDeriving
+    ImportQualifiedPost
+    OverloadedStrings
+    OverloadedRecordDot
+    NoStarIsType
+    LambdaCase
+
+library
+    import:           dialect, warnings
+    exposed-modules:  Telegram.Bot.API.Ergo.GettingUpdates Telegram.Bot.API.Ergo.MakingRequests
+      Telegram.Bot.API.Ergo.HasErgoRep
+    -- other-modules:
+    -- other-extensions:
+    build-depends:    
+      base >=4.18.1.0 && < 5, 
+                      telegram-bot-api ^>= 7.0,
+                      telegram-bot-ergo-types,
+                      servant-client,
+                      vector,
+    hs-source-dirs:   src
+
+test-suite telegram-bot-api-ergo-shim-test
+    import:           dialect, warnings
+    -- other-modules:
+    -- other-extensions:
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:
+        base ^>=4.18.1.0,
+        telegram-bot-api-ergo-shim
