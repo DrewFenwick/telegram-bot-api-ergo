@@ -21,7 +21,8 @@ newtype UpdateId = UpdateId Int64
   deriving (Eq, Ord, Show, Generic)
   deriving newtype (ToJSON, FromJSON)
 
-data Update = Update {updateId :: !Old.UpdateId, updateEvent :: !UpdateEvent}
+data Update = Update {updateId :: !UpdateId, updateEvent :: !UpdateEvent}
+  deriving (Generic, Show)
 
 instance FromJSON Update where
   parseJSON = withObject "Update" \o ->
