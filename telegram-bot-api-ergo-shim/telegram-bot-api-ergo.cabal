@@ -31,6 +31,7 @@ common dialect
     OverloadedRecordDot
     NoStarIsType
     LambdaCase
+    TypeApplications
 
 library
     import:           dialect, warnings
@@ -45,6 +46,7 @@ library
                       telegram-bot-api ^>= 7.0,
                       telegram-bot-ergo-types,
                       servant-client,
+                      servant,
                       vector,
     hs-source-dirs:   src
 
