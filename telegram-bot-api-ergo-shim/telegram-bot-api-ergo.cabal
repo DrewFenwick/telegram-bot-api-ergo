@@ -34,8 +34,10 @@ common dialect
 
 library
     import:           dialect, warnings
-    exposed-modules:  Telegram.Bot.API.Ergo.GettingUpdates Telegram.Bot.API.Ergo.MakingRequests
-      Telegram.Bot.API.Ergo.HasErgoRep
+    exposed-modules:  
+      Telegram.Bot.API.Ergo.GettingUpdates 
+      Telegram.Bot.API.Ergo.MakingRequests
+      Telegram.Bot.API.Ergo.HasOldRep
     -- other-modules:
     -- other-extensions:
     build-depends:    
