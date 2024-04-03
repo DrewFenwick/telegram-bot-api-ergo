@@ -4,12 +4,17 @@
 
 module Telegram.Bot.API.Ergo.HasOldRep (HasOldRep (..), unsafeFromOldRep) where
 
-import Control.Applicative
+import Control.Applicative ( asum )
 import Data.Int (Int64)
 import Data.Vector qualified as V
 import Telegram.Bot.API qualified as Old
 import Telegram.Bot.API.Ergo.Types
-import Telegram.Bot.API.Internal.TH
+    ( GetUpdatesRequest(..),
+      Update(..),
+      UpdateEvent(..),
+      UpdateId(..),
+      UpdateType(..) )
+import Telegram.Bot.API.Internal.TH ( makeDefault )
 
 makeDefault ''Old.Update
 
@@ -47,12 +52,12 @@ instance HasOldRep Update where
   type OldRep Update = Old.Update
   fromOldRep update = do
     updateId <- fromOldRep update.updateUpdateId
-    updateEvent <- maybe (Left failureMsg) Right $ getOldUpdateEvent update
+    event <- maybe (Left failureMsg) Right $ getOldUpdateEvent update
     pure Update{..}
    where
     failureMsg = "Extracting an update event from telegram-bot-api's Update type failed.\n Please contact the maintainer of telegram-bot-api-ergo-shim."
 
-  toOldRep update = case update.updateEvent of
+  toOldRep update = case update.event of
     EventMessage x -> eventlessUpdate{Old.updateMessage = Just x}
     EventEditedMessage x -> eventlessUpdate{Old.updateEditedMessage = Just x}
     EventChannelPost x -> eventlessUpdate{Old.updateChannelPost = Just x}
@@ -157,12 +162,13 @@ instance HasOldRep UpdateType where
 instance HasOldRep GetUpdatesRequest where
   type OldRep GetUpdatesRequest = Old.GetUpdatesRequest
   fromOldRep Old.GetUpdatesRequest{..} = do
-    getUpdatesOffset <- traverse fromOldRep getUpdatesOffset
-    getUpdatesAllowedUpdates <- traverse (traverse fromOldRep . V.fromList) getUpdatesAllowedUpdates
-    pure $ GetUpdatesRequest{..}
+    offset <- traverse fromOldRep getUpdatesOffset
+    allowedUpdates <- traverse (traverse fromOldRep . V.fromList) getUpdatesAllowedUpdates
+    pure $ GetUpdatesRequest{limit = getUpdatesLimit, timeout = getUpdatesTimeout, ..}
   toOldRep GetUpdatesRequest{..} =
     Old.GetUpdatesRequest
-      { getUpdatesOffset = toOldRep <$> getUpdatesOffset
-      , getUpdatesAllowedUpdates = V.toList . fmap toOldRep <$> getUpdatesAllowedUpdates
-      , ..
+      { getUpdatesOffset = toOldRep <$> offset
+      , getUpdatesAllowedUpdates = V.toList . fmap toOldRep <$> allowedUpdates
+      , getUpdatesLimit = limit
+      , getUpdatesTimeout = timeout
       }

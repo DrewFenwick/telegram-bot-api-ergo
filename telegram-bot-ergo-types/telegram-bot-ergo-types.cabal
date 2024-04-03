@@ -31,20 +31,39 @@ common dialect
     OverloadedStrings
     OverloadedRecordDot
     NoStarIsType
+    DuplicateRecordFields
+    LambdaCase
 
 library
   import:          dialect, warnings
-  exposed-modules: Telegram.Bot.API.Ergo.Types.Update Telegram.Bot.API.Ergo.Types
+  exposed-modules: 
+    Telegram.Bot.API.Ergo.Types.Update 
+    Telegram.Bot.API.Ergo.Types.Int 
+    Telegram.Bot.API.Ergo.Types
 
-  other-modules: Telegram.Bot.API.Ergo.Types.Internal.Utils
+  other-modules:
+    Telegram.Bot.API.Ergo.Types.Internal.Utils
   -- other-extensions:
   build-depends:
     , aeson             ^>=2.2.1
     , base              >=4.18.1.0 && <5
     , telegram-bot-api  ^>=7.0
     , vector            ^>=0.13.1
+    , template-haskell
 
   hs-source-dirs:  src
+
+library optics
+  import: dialect, warnings
+  visibility: public
+  exposed-modules:
+    Telegram.Bot.API.Ergo.Types.Optics
+  build-depends: 
+    , base              >=4.18.1.0 && <5
+    , telegram-bot-ergo-types
+    , telegram-bot-api
+    , optics
+  hs-source-dirs: src-optics
 
 test-suite telegram-bot-ergo-types-test
   import:         dialect, warnings
