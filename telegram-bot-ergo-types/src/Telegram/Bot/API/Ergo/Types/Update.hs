@@ -28,7 +28,7 @@ import Data.Aeson.TH
 -- | The type of Update unique identifiers.
 newtype UpdateId = UpdateId TelegramInt
   deriving (Eq, Ord, Show, Generic)
-  deriving newtype (ToJSON, FromJSON)
+  deriving newtype (Num, ToJSON, FromJSON)
 
 -- | This type represents an incoming update.
 data Update = Update 
